@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CTK MKOBA 2012 — Dashboard ya Kikundi (Oktoba 2026)</title>
+<style>
+  :root{
+    --green:#1b7a4b; --green-d:#115c37; --green-l:#e6f4ec;
+    --amber:#b7791f; --amber-l:#fdf3e3;
+    --red:#b3261e; --red-l:#fdecea;
+    --blue:#1d4e89; --blue-l:#e8f0fa;
+    --ink:#15302a; --mut:#5c726b; --line:#dce8e2; --bg:#f4f8f6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:Segoe UI,Roboto,Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.5;}
+  .wrap{max-width:900px; margin:0 auto; padding:14px;}
+  header{background:linear-gradient(135deg,var(--green),var(--green-d)); color:#fff; border-radius:16px; padding:20px 18px; margin-bottom:14px;}
+  header h1{font-size:22px; letter-spacing:.3px;}
+  header .sub{opacity:.92; font-size:14px; margin-top:2px;}
+  header .badges{display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;}
+  .badge{background:rgba(255,255,255,.16); border:1px solid rgba(255,255,255,.35); border-radius:99px; padding:4px 12px; font-size:12.5px;}
+  .notice{background:linear-gradient(135deg,#7a1b1b,#a3261e); color:#fff; border-radius:14px; padding:14px 16px; margin-bottom:14px; font-size:13.5px;}
+  .notice h3{font-size:15px; margin-bottom:6px;}
+  .notice a, .notice a:visited{color:#ffe9a8; font-weight:600; text-decoration:none;}
+  h2{font-size:17px; margin:22px 0 10px; display:flex; align-items:center; gap:8px;}
+  h2 .n{background:var(--green); color:#fff; border-radius:99px; font-size:12px; padding:2px 9px; flex-shrink:0;}
+  .cards{display:grid; grid-template-columns:repeat(2,1fr); gap:10px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px;}
+  .card .lbl{font-size:12px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px;}
+  .card .val{font-size:20px; font-weight:700; margin-top:3px;}
+  .card .small{font-size:12px; color:var(--mut); margin-top:2px;}
+  .green{color:var(--green);} .red{color:var(--red);} .amber{color:var(--amber);} .blue{color:var(--blue);}
+  .pill{display:inline-block; border-radius:99px; padding:2px 10px; font-size:11.5px; font-weight:600;}
+  .pill.ok{background:var(--green-l); color:var(--green-d);}
+  .pill.bad{background:var(--red-l); color:var(--red);}
+  .pill.debt{background:var(--amber-l); color:var(--amber);}
+  .pill.gone{background:#e7ebea; color:#5c726b;}
+  .leaders{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .leader{background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; text-align:center;}
+  .leader .av{width:52px;height:52px;border-radius:50%;background:var(--green-d);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:18px;margin:0 auto 8px;}
+  .leader .role{font-size:11.5px; color:var(--mut); text-transform:uppercase; letter-spacing:.5px;}
+  .leader .who{font-weight:700; font-size:14px; margin-top:2px;}
+  .search input{width:100%; padding:12px 14px; border:1px solid var(--line); border-radius:12px; font-size:16px; background:#fff;}
+  .search input:focus{outline:2px solid var(--green);}
+  .list{margin-top:10px;}
+  .member{background:#fff; border:1px solid var(--line); border-radius:12px; margin-bottom:8px; overflow:hidden;}
+  .member .row{display:flex; align-items:center; gap:10px; padding:12px 14px; cursor:pointer; user-select:none;}
+  .member .row:hover{background:var(--green-l);}
+  .member .row:active{background:#d8eee2;}
+  .avatar{width:38px; height:38px; border-radius:50%; background:var(--green-d); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:15px; flex-shrink:0;}
+  .avatar.gone{background:#9aa8a3;}
+  .mname{flex:1; font-weight:600; font-size:14.5px; min-width:0;}
+  .mstat{font-size:11.5px; color:var(--mut);}
+  .amt{text-align:right; flex-shrink:0;}
+  .amt .b{font-size:15px; font-weight:700;}
+  .detail{display:none; border-top:1px dashed var(--line); padding:12px 14px; background:#fbfdfc; font-size:13.5px; overflow-x:auto;}
+  .detail.show{display:block;}
+  .detail table{width:100%; border-collapse:collapse; margin-top:8px;}
+  .detail td{padding:5px 4px; border-bottom:1px solid var(--line);}
+  .detail td:last-child{text-align:right; font-weight:600;}
+  .detail tr:last-child td{border-bottom:none; font-weight:700;}
+  .note{background:var(--blue-l); border-left:4px solid var(--blue); border-radius:10px; padding:10px 12px; font-size:13px; margin:10px 0;}
+  .warn{background:var(--amber-l); border-left:4px solid var(--amber); border-radius:10px; padding:10px 12px; font-size:13px; margin:10px 0;}
+  .qa{background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px; font-size:13.5px; overflow-x:auto;}
+  .qa table{width:100%; border-collapse:collapse; margin-top:8px;}
+  .qa td{border-bottom:1px solid var(--line); padding:7px 6px; vertical-align:top;}
+  .qa td:first-child{width:52%;}
+  .qa tr:last-child td{border-bottom:none;}
+  details.katiba{background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px; margin-top:12px;}
+  details.katiba summary{cursor:pointer; font-weight:700; font-size:14.5px; color:var(--green-d);}
+  .katibabody{font-size:13.5px; margin-top:10px; max-height:520px; overflow:auto; padding-right:6px;}
+  .katibabody h4{margin:12px 0 4px; color:var(--green-d); font-size:13.5px;}
+  .katibabody ul{margin:4px 0 8px 18px;}
+  .mini{font-size:12.5px; color:var(--mut);}
+  .copy{border:1px dashed var(--line); border-radius:10px; background:#fff; padding:10px 12px; font-size:13px; margin:10px 0; white-space:pre-wrap;}
+  footer{text-align:center; font-size:12px; color:var(--mut); margin:22px 0 8px;}
+  @media(max-width:640px){
+    .wrap{padding:10px;}
+    header{padding:16px 14px;}
+    header h1{font-size:19px;}
+    .cards{grid-template-columns:1fr;}
+    .leaders{grid-template-columns:1fr;}
+    .card .val{font-size:18px;}
+    h2{font-size:15.5px;}
+    .notice{font-size:13px; padding:12px;}
+  }
+  @media(max-width:520px){
+    .member .row{flex-wrap:wrap; gap:6px 10px; padding:10px 12px;}
+    .avatar{width:32px;height:32px;font-size:12px;}
+    .mname{flex:1 1 auto; min-width:0;}
+    .pill{flex:0 1 auto;}
+    .amt{flex:1 0 100%; text-align:left; padding-top:2px;}
+    .amt .b{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+<noscript>
+  <div style="background:var(--amber-l);border-left:4px solid var(--amber);border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:10px;"><b>Tahadhari / Note:</b> Orodha ya wanachama na matukio inaonekana kwenye browser pekee (Chrome/Safari). Fungua ukurasa huu kwa browser — si kwenye onyesho la WhatsApp. <i>The member list and events appear only in a real browser — open this page in Chrome or Safari.</i></div>
+</noscript>
+
+<header>
+  <h1>CTK MKOBA 2012 — Dashboard ya Kikundi</h1>
+  <div class="badges">
+    <span class="badge">&#128994; Wanachama Active: 30</span>
+    <span class="badge">&#128308; Waliotolewa: 8</span>
+    <span class="badge">&#9888;&#65039; Waliojiaondoa/Exited: 3</span>
+    <span class="badge">Uwekezaji rasmi: Septemba 2026</span>
+  </div>
+</header>
+
+<div class="notice">
+  <h3>&#128227; TAARIFA MUHIMU KWA WANACHAMA WOTE — SEPTEMBA 2026</h3>
+  <p>Kuanzia Septemba 2026 kikundi kinaanza rasmi <b>mpango wa uwekezaji</b> uliopitishwa na uongozi. Kwa mujibu wa makubaliano ya mwisho:</p>
+  <ul style="margin:6px 0 6px 18px;">
+    <li>Wanachama wasio na deni au wenye deni la <b>2024–2026</b> wanaotaka kuendelea watatakiwa kujibu na kuonyesha <b>lini watalipa angalau 75% ya deni lao kabla ya mwisho wa Desemba 2026</b>.</li>
+    <li>Wanachama wasiotaka kuendelea, wasiojibu, au ambao deni lao halijapangwa kufutiwa <b>watatolewa mwezi Septemba 2026</b>.</li>
+    <li>Kwa wale wanaobaki na deni: <b>faida yao ya uwekezaji itatumika kufidia deni</b> kabla ya kulipwa.</li>
+    <li><b>Faini rasmi za kuchelewa zitaanza kutekelezwa Januari 2027</b> (TZS 10,000 kwa kuchelewa zaidi ya miezi miwili mfululizo).</li>
+  </ul>
+  <p>Tafadhali soma <a href="#taarifa">Taarifa kamili hapa chini</a>. Wasiliana na Katibu (Pendo Malangwa) au Mwenyekiti (Samwel Kimaro) kupitia WhatsApp kwa maelezo zaidi.</p>
+</div>
+
+<h2><span class="n">1</span> Muhtasari wa Fedha</h2>
+<div class="cards">
+  <div class="card"><div class="lbl">Jumla ya Michango (2024–2026)</div><div class="val green">TZS 4,370,000</div><div class="small">2024: 1,960,000 &middot; 2025: 1,845,000 &middot; 2026: 565,000</div></div>
+  <div class="card"><div class="lbl">Utoaji / Misaada</div><div class="val red">TZS 900,000</div><div class="small">Misiba na send-off, kwa mujibu wa katiba (matukio 5)</div></div>
+  <div class="card"><div class="lbl">Fedha kwenye Akaunti (M-Koba)</div><div class="val">TZS 3,470,000</div><div class="small">Sehemu kubwa itawekezwa; sehemu ndogo isalie kwa dharura na misaada ya kikatiba</div></div>
+  <div class="card"><div class="lbl">Lengo la Mchango kwa Mwaka</div><div class="val blue">TZS 4,200,000</div><div class="small">Wanachama 35 &times; TZS 10,000 kila mwezi (2026: 2027 hilo hilo)</div></div>
+</div>
+
+
+<h2><span class="n">2</span> Wanachama</h2>
+<div class="search"><input id="q" type="text" placeholder="Tafuta mwanachama kwa jina..."></div>
+<div class="list" id="list"></div>
+
+<h2><span class="n">3</span> Utoaji wa Fedha (Events) 2024–2026</h2>
+<div class="qa" id="events"></div>
+
+<h2 id="taarifa"><span class="n">4</span> Taarifa kamili kwa wanachama (Septemba 2026)</h2>
+<div class="qa">
+  <p><b>Kiswahili</b></p>
+  <div class="copy">KWA WANACHAMA WOTE WA CTK MKOBA 2012,
+
+Tunawashukuru kwa ushirikiano wenu wote wakati wote huu.
+
+Kutokana na maamuzi yaliyofikiwa katika kikao cha mwisho, tayari tunaanza mpango rasmi wa UWEKEZAJI kikundi kuanzia Septemba 2026. Kwa sababu hiyo na kutaka kuhakikisha kikundi kinakaa imara na kuwanufaisha wote, maazimio yafuatayo yanatekelezwa kuanzia Septemba 2026:
+
+1. UONDOLEWAJI WA WANACHAMA WASIOFANYA KAZI
+   - Mwanachama ambaye haimalizi deni lake la 2024–2026 NAE HATAKI KUENDELEA ataondolewa kwenye kikundi Septemba 2026.
+   - Mwanachama ANATAKA KUENDELEA anatakiwa kujibu kwa uongozi (Samwel, Pendo au Vanessa) na kuonyesha LITAKAPO LIPA ANGAU 75% YA DENI LAKE KABLA YA MWISHO WA MWAKA (Desemba 2026).
+   - Mwanachama aliye na deni na asiyejibu ahadi yake: FAIDA YAKE YA UWEKEZAJI ITATUMIKA KUFIDIA DENI.
+
+2. FAINI
+   - Huduma ya faini itaanza kufanya kazi kwa ukamilifu JANUARI 2027, kwa mujibu wa katiba (TZS 10,000 kwa kila mwezi wa kuchelewa zaidi ya miezi miwili).
+
+3. UWEKEZAJI
+   - Kuanzia Septemba 2026 sehemu ya michango itawekezwa (mfano 30%) kwenye mfuko uliosajiliwa na CMSA au Hati za Serikali. Faida itagawanywa kwa wanachama kwa uwiano wa michango zao.
+
+Tafadhali mjibu kwa viongozi kabla ya mwisho wa Septemba 2026, kuthibitisha kama mnaendelea na kuonyesha mpango wa kulipa deni. Baraka kwa wote.
+
+UONGOZI WA CTK MKOBA 2012</div>
+  <p><b>English</b></p>
+  <div class="copy">TO ALL CTK MKOBA 2012 MEMBERS,
+
+Thank you for your continued cooperation.
+
+Following the decisions at our last meeting, the group officially starts its INVESTMENT program in September 2026. To keep the group strong and ensure everyone benefits, the following resolutions take effect from September 2026:
+
+1. REMOVAL OF INACTIVE MEMBERS
+   - A member who has not cleared their 2024–2026 debt AND does NOT wish to continue will be removed from the group in September 2026.
+   - A member who WISHES TO CONTINUE must reply to the leadership (Samwel, Pendo or Vanessa) stating WHEN they will clear at least 75% of their debt before year-end (December 2026).
+   - For a member who remains in debt without honoring their commitment: their investment returns will be applied to clear the debt.
+
+2. FINES
+   - The fine system becomes fully effective JANUARY 2027, per the constitution (TZS 10,000 for each month of delay beyond two months).
+
+3. INVESTMENT
+   - From September 2026, a portion of monthly contributions (e.g. 30%) will be invested in a CMSA-licensed fund or Government Securities. Returns will be shared among members in proportion to their contributions.
+
+Please respond to the leadership before the end of September 2026 to confirm whether you are continuing and to state your debt-clearance plan.
+
+CTK MKOBA 2012 LEADERSHIP</div>
+</div>
+
+<h2><span class="n">5</span> Uongozi wa Kikundi</h2>
+<div class="leaders">
+  <div class="leader"><div class="av">SK</div><div class="role">Mwenyekiti (Chairperson)</div><div class="who">Samwel Kimaro</div></div>
+  <div class="leader"><div class="av">PM</div><div class="role">Katibu (Secretary)</div><div class="who">Pendo Malangwa</div></div>
+  <div class="leader"><div class="av">VS</div><div class="role">Mweka Hazina (Treasurer)</div><div class="who">Vanessa Soka</div></div>
+</div>
+<p class="mini" style="margin-top:8px;">Hawa ndio viongozi watatu walioidhinishwa kwenye katiba.</p>
+<footer>CTK MKOBA 2012 &middot; Data kwa mujibu wa Google Sheet (Septemba 2026) &middot; Hati hii ni ya taarifa za kikundi tu.</footer>
+</div>
+
+<script>
+const D = {"summary": {"contrib2024": 1960000, "contrib2025": 1845000, "contrib2026": 565000, "withdraw2024": 400000, "withdraw2025": 200000, "withdraw2026": 300000, "close2024": 1560000, "close2025": 1645000, "close2026": 265000, "annual2024": 2460000, "annual2025": 4200000, "annual2026": 4200000, "annual2027": 4200000, "sub2027": 700000, "currentBalance": 3470000}, "events": [{"date": "Apr 2024", "member": "Irene Obote", "reason": "To pay Condolences", "amount": 200000.0}, {"date": "Aug 2024", "member": "Flora Nyamsanga", "reason": "To pay Condolences", "amount": 200000.0}, {"date": "Mar 2025", "member": "Gilya Samwel", "reason": "To pay Condolences", "amount": 200000.0}, {"date": "May 2026", "member": "Nancy Muhami", "reason": "Send Off Celebration", "amount": 100000.0}, {"date": "Jun 2026", "member": "Julius Koni", "reason": "To pay Condolences", "amount": 200000.0}], "members": [{"id": 1, "name": "SAMWEL FREDRICK KIMARO", "phone": "255759326286", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 0, 0, 0]}, {"id": 2, "name": "PENDO MALANGWA", "phone": "255744056170", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 3, "name": "WILLIAM KISINDA JR.", "phone": "255652676060", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 0, 0, 0, 0]}, {"id": 4, "name": "VANESSA SOKA", "phone": "255689209497", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 0, 0, 0, 0]}, {"id": 5, "name": "MAUREEN NGUMA", "phone": "255745077179", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 6, "name": "NANCY MUHAMI", "phone": "255719124094", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 7, "name": "MICHAEL MAYUNGA", "phone": "255788013929", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 8, "name": "FRANCIS EMMANUEL", "phone": "255782811918", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 9, "name": "ANTHONY MGOMERA", "phone": "255658890058", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 10, "name": "BERNADETHA KINYERO", "phone": "255756763340", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 0, 0], "y26": [10000, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 11, "name": "FLORA NYAMSANGYA", "phone": "255626575538", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 12, "name": "CHRISTA EDWARD", "phone": "255684483312", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 13, "name": "IRENE OBOTE", "phone": "255717979596", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 14, "name": "WALTER EZRAEL", "phone": "255688468995", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 15, "name": "PETER PAUL", "phone": "255652132884", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 16, "name": "LOUIS NGUNWA", "phone": "255753497702", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 17, "name": "MSUYA MAGETA", "phone": "255768805671", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 0, 0]}, {"id": 18, "name": "ZAITUNI MREMA", "phone": "255746183053", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 19, "name": "HALIMA EDOKA", "phone": "255714503949", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 20, "name": "JULIUS KONI", "phone": "255764172891", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 0, 0]}, {"id": 21, "name": "EMMANUEL SABUNI", "phone": "255622379071", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000, 10000], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 22, "name": "VANESSA LATAMAN", "phone": "255757837743", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 23, "name": "GILYA SAMWEL MAYIKU", "phone": "255757346767", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 10000, 10000, 10000, 10000, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 24, "name": "CATRES NICAS", "phone": "255756979441", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 25, "name": "MICHAEL MMARI", "phone": "255718080174", "join": 2026, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000], "y25": [10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 26, "name": "VANESSA EDWARD SITTA", "phone": "255719319459", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 27, "name": "MARKO DENIS CHIPETA", "phone": "255672759951", "join": 2024, "status": "REMOVED", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 28, "name": "CAREEN RINGO", "phone": "255672369998", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 29, "name": "ELIZABETH MALIMA", "phone": "255750837232", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 30, "name": "BRIAN CHRISTOPHER", "phone": "255626680359", "join": 2024, "status": "REMOVED", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 31, "name": "OMARY MHOKA", "phone": "255673371647", "join": 2024, "status": "REMOVED", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 32, "name": "MERCY GODWIN BALOSHI", "phone": "255687862417", "join": 2024, "status": "REMOVED", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 33, "name": "JACKSON ENOCK MMASA", "phone": "255719603074", "join": 2024, "status": "REMOVED", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 34, "name": "MAUREEN MBELWA", "phone": "255688535282", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 35, "name": "ZAKARIA KASIMILA JR", "phone": "255622507920", "join": 2024, "status": "ACTIVE", "y24": [5000, 5000, 5000, 5000, 5000, 5000, 0, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 36, "name": "ELTON RINGO", "phone": "255750869570", "join": 2024, "status": "EXITED", "y24": [5000, 5000, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 37, "name": "OSMUND LUPINDU", "phone": "255696939231", "join": 2024, "status": "REMOVED", "y24": [5000, 5000, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 38, "name": "KELVIN SAMSON MUSA", "phone": "255769928320", "join": 2024, "status": "REMOVED", "y24": [5000, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 39, "name": "LILIAN HILARY NKYA", "phone": "255613411140", "join": 2024, "status": "EXITED", "y24": [5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 40, "name": "JOSEPH THOMAS MALLYA", "phone": "255621188446", "join": 2024, "status": "EXITED", "y24": [5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}, {"id": 41, "name": "SAMUEL JOHN MNUBI", "phone": "255718549019", "join": 2024, "status": "REMOVED", "y24": [5000, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y25": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "y26": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]}]};
+const S = D.summary;
+const MEMBERS = D.members;
+const EVENTS = D.events;
+
+const fmt = n => 'TZS ' + n.toLocaleString('en-US');
+const since = status => {
+  if (status==='ACTIVE') return {t:'Active', c:'ok'};
+  if (status==='REMOVED') return {t:'AMETOLEWA', c:'bad'};
+  return {t:'AMEONDOKA', c:'gone'};
+};
+
+function paid(m){ return sum(m.y24)+sum(m.y25)+sum(m.y26); }
+function sum(a){ return a.reduce((x,v)=>x+v,0); }
+const EXP_SEP = 270000;   // 60,000 (2024) + 120,000 (2025) + 90,000 (2026 hadi Sep)
+const EXP_YEAR = 300000;  // kwa mwaka kamili 2026
+const SW_MONTHS = ['Januari','Februari','Machi','Aprili','Mei','Juni','Julai','Agosti','Septemba','Oktoba','Novemba','Disemba'];
+const EN_MONTHS_S = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const covered = p => {
+  const surplus = Math.max(0, p - EXP_SEP);
+  const months = Math.floor(surplus / 10000);
+  const i = (8 + months) % 12;
+  const y = 2026 + Math.floor((8 + months) / 12);
+  return {f: SW_MONTHS[i] + ' ' + y, s: EN_MONTHS_S[i] + ' ' + y};
+};
+
+function renderMembers(){
+  const list = document.getElementById('list');
+  const q = (document.getElementById('q').value||'').toLowerCase();
+  const active = MEMBERS.filter(m=>m.status==='ACTIVE')
+    .sort((a,b)=>paid(b)-paid(a) || a.name.localeCompare(b.name));
+  const gone = MEMBERS.filter(m=>m.status!=='ACTIVE')
+    .sort((a,b)=>a.name.localeCompare(b.name));
+  let html='';
+  const card = m => {
+    const p = paid(m);
+    const dSep = Math.max(0, EXP_SEP - p);
+    const dYr = Math.max(0, EXP_YEAR - p);
+    const mm = m.name.split(' ').map(w=>w[0]||'').slice(0,2).join('');
+    const st = since(m.status);
+    html += '<div class="member"><div class="row" onclick="toggle(this)">'+
+      '<div class="avatar'+(m.status!=='ACTIVE'?' gone':'')+'">'+mm+'</div>'+
+      '<div class="mname">'+m.name+'<div class="mstat">'+st.t+' &middot; Amelipa jumla '+fmt(p)+'</div></div>'+
+      '<span class="pill '+(dSep>0?'debt':st.c) + '">'+(dSep>0?'DENI '+dSep.toLocaleString():'Covered till '+covered(p).s)+'</span>'+
+      '<div class="amt"><div class="b">'+fmt(p)+'</div></div>'+
+    '</div>'+
+    '<div class="detail"><table>'+
+      '<tr><td>Namba ya simu</td><td>+'+m.phone+' <a href="https://wa.me/'+m.phone+'" target="_blank" rel="noopener" title="WhatsApp" style="text-decoration:none;font-size:16px;">&#128172;</a> <a href="tel:+'+m.phone+'" title="Piga simu" style="text-decoration:none;font-size:16px;">&#128222;</a></td></tr>'+
+      '<tr><td>Mwaka wa kujiunga</td><td>'+m.join+'</td></tr>'+
+      '<tr><td>Mchango 2024</td><td>'+fmt(sum(m.y24))+'</td></tr>'+
+      '<tr><td>Mchango 2025</td><td>'+fmt(sum(m.y25))+'</td></tr>'+
+      '<tr><td>Mchango 2026 (hadi Septemba)</td><td>'+fmt(sum(m.y26))+'</td></tr>'+
+      '<tr><td>Jumla aliyolipa (2024–2026)</td><td>'+fmt(p)+'</td></tr>'+
+      '<tr><td>Alitakiwa kufikia Septemba (270,000)</td><td>'+fmt(EXP_SEP)+'</td></tr>'+
+      '<tr><td>Deni kufikia Septemba 2026</td><td style="color:'+(dSep>0?'var(--red)':'var(--green)')+'">'+(dSep>0?fmt(dSep):'Hakuna deni &middot; Amelipa hadi '+covered(p).f)+'</td></tr>'+
+      '<tr><td>Deni mwaka kamili 2026</td><td style="color:'+(dYr>0?'var(--red)':'var(--green)')+'">'+fmt(dYr)+'</td></tr>'+
+      (m.name==='MICHAEL MMARI' ? '<tr><td>Kumbuka</td><td>Amejiunga Rasmi 2026; michango yake ya 2024–2025 imerekodiwa kwenye orodha.</td></tr>' : '')+
+    '</table></div></div>';
+  };
+  active.forEach(m=>{ if(!q || m.name.toLowerCase().includes(q)) card(m); });
+  if(!q){
+    html += '<div style="margin:16px 0 8px;font-weight:700;color:var(--mut);font-size:13px;">&#128680; Waliotolewa / Waliojiaondoa (11)</div>';
+    gone.forEach(m=>card(m));
+  }
+  list.innerHTML = html;
+}
+function toggle(el){
+  const d = el.nextElementSibling;
+  if(d) d.classList.toggle('show');
+}
+document.getElementById('q').addEventListener('input', renderMembers);
+
+function renderEvents(){
+  const el = document.getElementById('events');
+  const tot = EVENTS.reduce((x,e)=>x+e.amount,0);
+  let h = '<table>';
+  EVENTS.forEach(e=>{
+    h += '<tr><td>'+e.date+'</td><td>'+e.member+' &middot; <span class="mini">'+e.reason+'</span></td><td>'+fmt(e.amount)+'</td></tr>';
+  });
+  h += '<tr><td colspan="2"><b>JUMLA YA UTOAJI</b></td><td>'+fmt(tot)+'</td></tr></table>';
+  el.innerHTML = h;
+}
+
+renderMembers();
+renderEvents();
+</script>
+</body>
+</html>
